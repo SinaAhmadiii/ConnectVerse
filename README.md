@@ -24,13 +24,19 @@ Privacy and Security: Take control of your privacy settings on ConnectVerse. Cho
 Setting up ConnectVerse on your local machine is a breeze. Just follow these steps:
 
 Clone the repository from GitHub:
-git clone https://github.com//SinaAhmadiii/ConnectVerse.git
+bash
+Copy code
+git clone https://github.com/your-username/ConnectVerse.git
 Install the necessary dependencies:
+Copy code
 pip install -r requirements.txt
 Set up the database and run migrations:
+Copy code
 python manage.py migrate
 Create a superuser account:
+Copy code
 python manage.py createsuperuser
 Start the development server:
+Copy code
 python manage.py runserver
-Access ConnectVerse through your web browser
+Access ConnectVerse through your web browser at http://localhost:8000
