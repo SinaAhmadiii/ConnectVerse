@@ -8,5 +8,6 @@ urlpatterns = [
     path('post/', include('post.urls')),
     path('comment/', include('comment.urls')),
     path('reply/', include('reply.urls')),
+    path('bookmark/', include('bookmark.urls')),
 
 ]
