@@ -20,7 +20,7 @@ def register(request):
         messages.success(request, 'Registration successful! You can now log in.')
         return redirect('login')
     
-    return render(request, 'users/register.html')
+    return render(request, 'register.html')
 
 
 def login(request):
@@ -35,4 +35,4 @@ def login(request):
         except User.DoesNotExist:
             messages.error(request, 'Invalid email or password. Please try again.')
     
-    return render(request, 'users/login.html')
+    return render(request, 'login.html')
