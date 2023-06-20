@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bookmark Detail</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/css/bootstrap.min.css">
+  <style>
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Bookmark Detail</h1>
+    <hr>
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Bookmark ID: {{ bookmark.bookmark_id }}</h5>
+        <p class="card-text">User: {{ bookmark.user }}</p>
+        <p class="card-text">Post ID: {{ bookmark.post.post_id }}</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
