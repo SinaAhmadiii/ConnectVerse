@@ -6,4 +6,5 @@ urlpatterns = [
     path('users/', include('users.urls')),
     path('info/', include('info.urls')),
     path('post/', include('post.urls')),
+    path('comment/', include('comment.urls')),
 ]
