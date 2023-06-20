@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bookmark List</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/css/bootstrap.min.css">
+  <style>
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Bookmark List</h1>
+    <hr>
+    <ul class="list-group">
+      {% for bookmark in bookmarks %}
+      <li class="list-group-item">
+        <a href="{% url 'bookmark:bookmark_detail' bookmark_id=bookmark.bookmark_id %}">Bookmark ID: {{ bookmark.bookmark_id }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</body>
+</html>
