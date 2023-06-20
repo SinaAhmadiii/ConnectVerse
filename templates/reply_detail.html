@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Reply Detail</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/css/bootstrap.min.css">
+  <style>
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Reply Detail</h1>
+    <hr>
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Reply ID: {{ reply.reply_id }}</h5>
+        <p class="card-text">User: {{ reply.user }}</p>
+        <p class="card-text">Comment ID: {{ reply.comment.comment_id }}</p>
+        <p class="card-text">Reply Text: {{ reply.reply_text }}</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

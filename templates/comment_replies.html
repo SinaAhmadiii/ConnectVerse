@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Comment Replies</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/css/bootstrap.min.css">
+  <style>
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Comment Replies</h1>
+    <hr>
+    <h2>Comment ID: {{ comment.comment_id }}</h2>
+    <h3>Comment Text: {{ comment.comment_text }}</h3>
+    <div class="card">
+      <div class="card-body">
+        {% for reply in replies %}
+        <h5 class="card-title">Reply ID: {{ reply.reply_id }}</h5>
+        <p class="card-text">User: {{ reply.user }}</p>
+        <p class="card-text">Reply Text: {{ reply.reply_text }}</p>
+        <hr>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</body>
+</html>
