@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile Detail</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+ 
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2>Profile Detail</h2>
+    <div class="card">
+      <img class="card-img-top" src="{{ profile.profile_picture.url }}" alt="Profile Picture">
+      <div class="card-body">
+        <h5 class="card-title">{{ profile.user.username }}</h5>
+        <p class="card-text">{{ profile.bio }}</p>
+        <p class="card-text">Account Created: {{ profile.account_created }}</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>
