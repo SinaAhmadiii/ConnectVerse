@@ -16,4 +16,4 @@ def test_profile_detail_view():
 
     assert 'profile' in response.context
 
-    assert 'info/profile_detail.html' in response.template_name
+    assert 'profile_detail.html' in response.template_name
