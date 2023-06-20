@@ -31,8 +31,12 @@ def login(request):
         try:
             user = User.objects.get(email=email, password=password)
             messages.success(request, 'Login successful! Welcome, ' + user.first_name + '!')
-            return redirect('home')  # Replace 'home' with the URL name of your home page
+            return redirect('index') 
         except User.DoesNotExist:
             messages.error(request, 'Invalid email or password. Please try again.')
     
     return render(request, 'login.html')
+
+
+def index(request):
+    return render(request,'index.html')
