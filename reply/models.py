@@ -7,6 +7,8 @@ class Reply(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='User')
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE, verbose_name='Comment')
     reply_text = models.TextField(verbose_name='Reply Text', help_text='Enter your reply here.')
+    liked_by = models.ManyToManyField(User, related_name='liked_replies', blank=True)
+
 
     def __str__(self):
         return f"Reply {self.reply_id} by {self.user.username} on Comment {self.comment.comment_id}"
