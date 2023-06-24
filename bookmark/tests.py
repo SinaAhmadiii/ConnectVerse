@@ -1,60 +1,37 @@
-import pytest
-from django.urls import reverse
-from django.contrib.auth.models import User
+from django.test import TestCase
+from users.models import User
+from post.models import Post
 from .models import Bookmark
-from .views import bookmark_list, bookmark_detail, bookmark_post, remove_bookmark
 
+class BookmarkModelTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create(username='testuser')
+        cls.post = Post.objects.create(title='Test Post', content='This is a test post.')
 
-@pytest.fixture
-def user():
-    return User.objects.create_user(username='testuser', password='testpassword')
+    def test_bookmark_creation(self):
+        bookmark = Bookmark.objects.create(user=self.user, post=self.post)
 
+        self.assertTrue(isinstance(bookmark, Bookmark))
+        self.assertEqual(bookmark.user, self.user)
+        self.assertEqual(bookmark.post, self.post)
 
-@pytest.fixture
-def bookmark(user):
-    return Bookmark.objects.create(user=user, post_id=1)
+    def test_get_user_bookmarks(self):
+        Bookmark.objects.create(user=self.user, post=self.post)
+        Bookmark.objects.create(user=self.user, post=self.post)
 
+        bookmarks = Bookmark.objects.get_user_bookmarks(self.user)
 
-@pytest.mark.django_db
-def test_bookmark_list(client, user):
-    Bookmark.objects.create(user=user, post_id=1)
-    Bookmark.objects.create(user=user, post_id=2)
+        self.assertEqual(len(bookmarks), 2)
+        for bookmark in bookmarks:
+            self.assertEqual(bookmark.user, self.user)
 
-    url = reverse('bookmark:bookmark_list')
-    response = client.get(url)
+    def test_get_bookmarked_posts(self):
+        Bookmark.objects.create(user=self.user, post=self.post)
+        Bookmark.objects.create(user=self.user, post=self.post)
 
-    assert response.status_code == 200
-    assert 'Bookmark List' in response.content.decode()
-    assert 'Bookmark ID: 1' in response.content.decode()
-    assert 'Bookmark ID: 2' in response.content.decode()
+        bookmarks = Bookmark.objects.get_bookmarked_posts(self.user)
 
-
-@pytest.mark.django_db
-def test_bookmark_detail(client, user, bookmark):
-    url = reverse('bookmark:bookmark_detail', kwargs={'bookmark_id': bookmark.id})
-    response = client.get(url)
-
-    assert response.status_code == 200
-    assert f'Bookmark ID: {bookmark.id}' in response.content.decode()
-    assert f'User: {user}' in response.content.decode()
-    assert f'Post ID: {bookmark.post_id}' in response.content.decode()
-
-
-@pytest.mark.django_db
-def test_bookmark_post(client, user):
-    url = reverse('bookmark:bookmark_post', kwargs={'post_id': 1})
-    response = client.get(url)
-
-    assert response.status_code == 200
-    assert 'Bookmark Post' in response.content.decode()
-    assert 'Bookmark added successfully!' in response.content.decode()
-
-
-@pytest.mark.django_db
-def test_remove_bookmark(client, user, bookmark):
-    url = reverse('bookmark:remove_bookmark', kwargs={'bookmark_id': bookmark.id})
-    response = client.get(url)
-
-    assert response.status_code == 200
-    assert 'Remove Bookmark' in response.content.decode()
-    assert 'Bookmark removed successfully!' in response.content.decode()
+        self.assertEqual(len(bookmarks), 2)
+        for bookmark in bookmarks:
+            self.assertEqual(bookmark.post, self.post)
