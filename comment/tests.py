@@ -1,14 +1,31 @@
-from django.test import RequestFactory
-from django.urls import reverse
-import pytest
-from .models import Comment
-from .views import comment_detail
+from django.test import TestCase
+from users.models import User
+from post.models import Post
+from comment.models import Comment
 
-@pytest.mark.django_db
-def test_comment_detail_view():
-    comment = Comment.objects.create(comment_id=1, user_id=1, post_id=1, comment_text='Test comment')
-    request = RequestFactory().get(reverse('comment:comment_detail', args=[comment.comment_id]))
-    response = comment_detail(request, comment_id=comment.comment_id)
-    assert response.status_code == 200
-    assert 'comment' in response.context
-    assert 'comment/comment_detail.html' in response.template_name
+class CommentModelTestCase(TestCase):
+    def setUp(self):
+        # Create a user
+        self.user = User.objects.create(username='testuser')
+
+        # Create a post
+        self.post = Post.objects.create(title='Test Post', content='This is a test post.')
+
+        # Create a comment
+        self.comment = Comment.objects.create(user=self.user, post=self.post, comment_text='This is a test comment.')
+
+    def test_comment_id(self):
+        self.assertEqual(self.comment.get_comment_id(), self.comment.comment_id)
+
+    def test_user(self):
+        self.assertEqual(self.comment.get_user(), self.user)
+
+    def test_post(self):
+        self.assertEqual(self.comment.get_post(), self.post)
+
+    def test_comment_text(self):
+        self.assertEqual(self.comment.get_comment_text(), 'This is a test comment.')
+
+    def test_string_representation(self):
+        expected_string = f"Comment {self.comment.comment_id} by {self.user.username} on Post {self.post.post_id}"
+        self.assertEqual(str(self.comment), expected_string)
