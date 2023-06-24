@@ -1,14 +1,36 @@
-from django.test import RequestFactory
-from django.urls import reverse
-import pytest
-from .models import Post
-from .views import post_detail
+from django.test import TestCase
+from users.models import User
+from models import Post
 
-@pytest.mark.django_db
-def test_post_detail_view():
-    post = Post.objects.create(post_id=1, user_id=1, post_text='Test post', likes_count=0, views_count=0)
-    request = RequestFactory().get(reverse('post:post_detail', args=[post.post_id]))
-    response = post_detail(request, post_id=post.post_id)
-    assert response.status_code == 200
-    assert 'post' in response.context
-    assert 'post/post_detail.html' in response.template_name
+class PostModelTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        # Create a user for the test
+        user = User.objects.create(username='testuser')
+        
+        # Create a post for the test
+        Post.objects.create(user=user, post_text='Test post')
+
+    def test_post_str_representation(self):
+        post = Post.objects.get(post_id=1)
+        expected_str = "Post 1 by testuser"
+        self.assertEqual(str(post), expected_str)
+
+    def test_increment_likes(self):
+        post = Post.objects.get(post_id=1)
+        initial_likes = post.likes_count
+        post.increment_likes()
+        updated_likes = post.likes_count
+        self.assertEqual(updated_likes, initial_likes + 1)
+
+    def test_verbose_names(self):
+        post = Post.objects.get(post_id=1)
+        field_names = {
+            'post_id': 'Post ID',
+            'user': 'User',
+            'post_text': 'Post Text',
+            'likes_count': 'Likes Count',
+            'views_count': 'Views Count',
+        }
+        for field in post._meta.fields:
+            self.assertEqual(field.verbose_name, field_names[field.name])
