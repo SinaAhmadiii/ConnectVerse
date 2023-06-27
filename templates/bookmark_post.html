@@ -1,18 +1,10 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Bookmark Post</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/css/bootstrap.min.css">
-  <style>
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>Bookmark Post</h1>
-    <hr>
-    <div class="alert alert-success" role="alert">
-      {{ message }}
-    </div>
-  </div>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Bookmark Post</h2>
+  <p>Do you want to bookmark this post?</p>
+  <form method="POST">
+    {% csrf_token %}
+    <button type="submit">Bookmark</button>
+  </form>
+{% endblock %}

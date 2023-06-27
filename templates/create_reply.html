@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Create Reply</h2>
+  <form method="POST">
+    {% csrf_token %}
+    <textarea name="reply_text" rows="4" cols="50" placeholder="Enter your reply here"></textarea>
+    <button type="submit">Submit</button>
+  </form>
+{% endblock %}
