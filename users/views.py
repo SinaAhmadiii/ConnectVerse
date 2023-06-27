@@ -1,42 +1,43 @@
 from django.shortcuts import render, redirect
-from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import User
 
 def register(request):
     if request.method == 'POST':
-        first_name = request.POST['first_name']
-        last_name = request.POST['last_name']
-        username = request.POST['username']
-        email = request.POST['email']
-        age = request.POST['age']
-        phone_number = request.POST['phone_number']
-        password = request.POST['password']
-        
-        # Create a new user
-        user = User(first_name=first_name, last_name=last_name, username=username,
-                    email=email, age=age, phone_number=phone_number, password=password)
-        user.save()
-        
-        messages.success(request, 'Registration successful! You can now log in.')
-        return redirect('login')
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login')
+    else:
+        form = UserCreationForm()
     
-    return render(request, 'register.html')
+    context = {'form': form}
+    return render(request, 'users/register.html', context)
 
-
-def login(request):
+def user_login(request):
     if request.method == 'POST':
-        email = request.POST['email']
-        password = request.POST['password']
-        
-        try:
-            user = User.objects.get(email=email, password=password)
-            messages.success(request, 'Login successful! Welcome, ' + user.first_name + '!')
-            return redirect('index') 
-        except User.DoesNotExist:
-            messages.error(request, 'Invalid email or password. Please try again.')
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('home')
     
-    return render(request, 'login.html')
+    form = AuthenticationForm()
+    context = {'form': form}
+    return render(request, 'users/login.html', context)
 
+@login_required
+def user_logout(request):
+    logout(request)
+    return redirect('home')
 
-def index(request):
-    return render(request,'index.html')
+@login_required
+def profile(request):
+    user = request.user
+    context = {'user': user}
+    return render(request, 'users/profile.html', context)
