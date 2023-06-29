@@ -1,39 +1,26 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from post.models import Post
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
 from .models import Comment
+from .forms import CommentForm
 
-def create_comment(request, post_id):
-    post = get_object_or_404(Post, post_id=post_id)
-    
-    if request.method == 'POST':
-        comment_text = request.POST.get('comment_text')
-        comment = Comment(user=request.user, post=post, comment_text=comment_text)
-        comment.save()
-        return redirect('post_detail', post_id=post_id)
-    
-    context = {'post': post}
-    return render(request, 'comment/create_comment.html', context)
+class CommentListView(ListView):
+    model = Comment
+    template_name = 'comment/comment_list.html'  
+    context_object_name = 'comments'  
 
-def edit_comment(request, comment_id):
-    comment = get_object_or_404(Comment, comment_id=comment_id)
-    post_id = comment.post.post_id
-    
-    if request.method == 'POST':
-        comment_text = request.POST.get('comment_text')
-        comment.comment_text = comment_text
-        comment.save()
-        return redirect('post_detail', post_id=post_id)
-    
-    context = {'comment': comment}
-    return render(request, 'comment/edit_comment.html', context)
+class CommentCreateView(CreateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = 'comment/comment_create.html'  
+    success_url = reverse_lazy('comment_list')  
 
-def delete_comment(request, comment_id):
-    comment = get_object_or_404(Comment, comment_id=comment_id)
-    post_id = comment.post.post_id
-    
-    if request.method == 'POST':
-        comment.delete()
-        return redirect('post_detail', post_id=post_id)
-    
-    context = {'comment': comment}
-    return render(request, 'comment/delete_comment.html', context)
+class CommentUpdateView(UpdateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = 'comment/comment_update.html'  
+    success_url = reverse_lazy('comment_list')  
+
+class CommentDeleteView(DeleteView):
+    model = Comment
+    template_name = 'comment/comment_delete.html'  
+    success_url = reverse_lazy('comment_list')  
