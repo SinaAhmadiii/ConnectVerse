@@ -1,47 +1,58 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.models import User
+from django.shortcuts import render, redirect
+from django.views.generic import View
+from django.contrib import messages
+from .forms import ProfilePictureForm, BioForm, DeleteProfileForm
+
 from .models import Profile
 
-def view_profile(request, username):
-    user = get_object_or_404(User, username=username)
-    profile = get_object_or_404(Profile, user=user)
-    
-    context = {'profile': profile}
-    return render(request, 'profile/view_profile.html', context)
 
-def edit_profile(request):
-    user = request.user
-    profile = get_object_or_404(Profile, user=user)
-    
-    if request.method == 'POST':
-        bio = request.POST.get('bio')
-        profile.bio = bio
-        profile.save()
-        return redirect('view_profile', username=user.username)
-    
-    context = {'profile': profile}
-    return render(request, 'profile/edit_profile.html', context)
+class ProfileUpdateView(View):
+    def get(self, request):
+        profile = request.user.profile
+        picture_form = ProfilePictureForm(instance=profile)
+        bio_form = BioForm(instance=profile)
+        context = {
+            'picture_form': picture_form,
+            'bio_form': bio_form
+        }
+        return render(request, 'profile_update.html', context)
 
-def update_profile_picture(request):
-    user = request.user
-    profile = get_object_or_404(Profile, user=user)
-    
-    if request.method == 'POST':
-        profile_picture = request.FILES.get('profile_picture')
-        profile.profile_picture = profile_picture
-        profile.save()
-        return redirect('view_profile', username=user.username)
-    
-    context = {'profile': profile}
-    return render(request, 'profile/update_profile_picture.html', context)
+    def post(self, request):
+        profile = request.user.profile
+        picture_form = ProfilePictureForm(request.POST, request.FILES, instance=profile)
+        bio_form = BioForm(request.POST, instance=profile)
 
-def delete_profile(request):
-    user = request.user
-    profile = get_object_or_404(Profile, user=user)
-    
-    if request.method == 'POST':
-        profile.delete_profile()
-        return redirect('home')
-    
-    context = {'profile': profile}
-    return render(request, 'profile/delete_profile.html', context)
+        if picture_form.is_valid():
+            picture_form.save()
+            messages.success(request, 'Profile picture updated successfully.')
+
+        if bio_form.is_valid():
+            bio_form.save()
+            messages.success(request, 'Bio updated successfully.')
+
+        return redirect('profile')
+
+
+class ProfileDeleteView(View):
+    def get(self, request):
+        form = DeleteProfileForm()
+        return render(request, 'profile_delete.html', {'form': form})
+
+    def post(self, request):
+        form = DeleteProfileForm(request.POST, instance=request.user.profile)
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Profile deleted successfully.')
+            return redirect('home')
+
+        return render(request, 'profile_delete.html', {'form': form})
+
+
+class ProfileDetailView(View):
+    def get(self, request):
+        profile = request.user.profile
+        context = {
+            'profile': profile
+        }
+        return render(request, 'profile_detail.html', context)
