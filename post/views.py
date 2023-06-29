@@ -1,33 +1,27 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
 from .models import Post
+from .forms import PostForm
 
-def create_post(request):
-    if request.method == 'POST':
-        post_text = request.POST.get('post_text')
-        post = Post(user=request.user, post_text=post_text)
-        post.save()
-        return redirect('home')
-    
-    return render(request, 'post/create_post.html')
+class PostListView(ListView):
+    model = Post
+    template_name = 'post_list.html'
+    context_object_name = 'posts'
+    paginate_by = 10
 
-def edit_post(request, post_id):
-    post = get_object_or_404(Post, post_id=post_id)
-    
-    if request.method == 'POST':
-        post_text = request.POST.get('post_text')
-        post.post_text = post_text
-        post.save()
-        return redirect('home')
-    
-    context = {'post': post}
-    return render(request, 'post/edit_post.html', context)
+class PostCreateView(CreateView):
+    model = Post
+    form_class = PostForm
+    template_name = 'post_create.html'
+    success_url = reverse_lazy('post_list')
 
-def delete_post(request, post_id):
-    post = get_object_or_404(Post, post_id=post_id)
-    
-    if request.method == 'POST':
-        post.delete()
-        return redirect('home')
-    
-    context = {'post': post}
-    return render(request, 'post/delete_post.html', context)
+class PostUpdateView(UpdateView):
+    model = Post
+    form_class = PostForm
+    template_name = 'post_update.html'
+    success_url = reverse_lazy('post_list')
+
+class PostDeleteView(DeleteView):
+    model = Post
+    template_name = 'post_delete.html'
+    success_url = reverse_lazy('post_list')
