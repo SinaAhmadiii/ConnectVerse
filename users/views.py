@@ -1,43 +1,97 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, \
+    PasswordResetConfirmView, PasswordResetCompleteView
+from django.urls import reverse_lazy
+from django.views import View
+from django.views.generic import FormView, TemplateView, UpdateView
+from django.shortcuts import redirect
+from .forms import UserRegistrationForm, UserLoginForm, UserPasswordChangeForm, UserPasswordResetForm, UserUpdateForm
 from .models import User
 
-def register(request):
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('login')
-    else:
-        form = UserCreationForm()
-    
-    context = {'form': form}
-    return render(request, 'users/register.html', context)
 
-def user_login(request):
-    if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-            user = authenticate(request, username=username, password=password)
-            if user is not None:
-                login(request, user)
-                return redirect('home')
-    
-    form = AuthenticationForm()
-    context = {'form': form}
-    return render(request, 'users/login.html', context)
+class UserRegistrationView(FormView):
+    template_name = 'registration.html'
+    form_class = UserRegistrationForm
+    success_url = reverse_lazy('login')
 
-@login_required
-def user_logout(request):
-    logout(request)
-    return redirect('home')
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
 
-@login_required
-def profile(request):
-    user = request.user
-    context = {'user': user}
-    return render(request, 'users/profile.html', context)
+
+class UserLoginView(FormView):
+    template_name = 'login.html'
+    form_class = UserLoginForm
+    success_url = reverse_lazy('dashboard')
+
+    def form_valid(self, form):
+        username = form.cleaned_data['username']
+        password = form.cleaned_data['password']
+        user = authenticate(username=username, password=password)
+
+        if user is not None:
+            login(self.request, user)
+            return super().form_valid(form)
+
+        form.add_error(None, 'Invalid username or password')
+        return super().form_invalid(form)
+
+
+class UserLogoutView(View):
+    def get(self, request):
+        logout(request)
+        return redirect('login')
+
+
+class UserDashboardView(LoginRequiredMixin, TemplateView):
+    template_name = 'dashboard.html'
+
+
+class UserUpdateView(LoginRequiredMixin, UpdateView):
+    model = User
+    form_class = UserUpdateForm
+    template_name = 'update_profile.html'
+    success_url = reverse_lazy('dashboard')
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+
+class UserPasswordChangeView(LoginRequiredMixin, FormView):
+    template_name = 'change_password.html'
+    form_class = UserPasswordChangeForm
+    success_url = reverse_lazy('dashboard')
+
+    def form_valid(self, form):
+        user = self.request.user
+        current_password = form.cleaned_data['current_password']
+        new_password = form.cleaned_data['new_password']
+
+        if user.check_password(current_password):
+            user.set_password(new_password)
+            user.save()
+            return super().form_valid(form)
+
+        form.add_error('current_password', 'Incorrect current password')
+        return super().form_invalid(form)
+
+
+class UserPasswordResetView(PasswordResetView):
+    template_name = 'password_reset.html'
+    form_class = UserPasswordResetForm
+    email_template_name = 'password_reset_email.html'
+    success_url = reverse_lazy('password_reset_done')
+
+
+class UserPasswordResetDoneView(PasswordResetDoneView):
+    template_name = 'password_reset_done.html'
+
+
+class UserPasswordResetConfirmView(PasswordResetConfirmView):
+    template_name = 'password_reset_confirm.html'
+    success_url = reverse_lazy('password_reset_complete')
+
+
+class UserPasswordResetCompleteView(PasswordResetCompleteView):
+    template_name = 'password_reset_complete.html'
