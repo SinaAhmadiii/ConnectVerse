@@ -1,33 +1,23 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from users.models import User
-from post.models import Post
+from django.views.generic import ListView, CreateView
+from django.urls import reverse_lazy
 from .models import Bookmark
+from .forms import BookmarkForm
 
-def bookmark_post(request, post_id):
-    post = get_object_or_404(Post, post_id=post_id)
-    
-    if request.method == 'POST':
-        bookmark = Bookmark(user=request.user, post=post)
-        bookmark.save()
-        return redirect('post_detail', post_id=post_id)
-    
-    context = {'post': post}
-    return render(request, 'bookmark/bookmark_post.html', context)
+class BookmarkListView(ListView):
+    model = Bookmark
+    template_name = 'bookmark_list.html'
+    context_object_name = 'bookmarks'
 
-def remove_bookmark(request, bookmark_id):
-    bookmark = get_object_or_404(Bookmark, bookmark_id=bookmark_id)
-    post_id = bookmark.post.post_id
-    
-    if request.method == 'POST':
-        bookmark.delete()
-        return redirect('post_detail', post_id=post_id)
-    
-    context = {'bookmark': bookmark}
-    return render(request, 'bookmark/remove_bookmark.html', context)
+    def get_queryset(self):
+        user = self.request.user
+        return Bookmark.objects.filter(user=user)
 
-def user_bookmarks(request, username):
-    user = get_object_or_404(User, username=username)
-    bookmarks = Bookmark.objects.filter(user=user)
-    
-    context = {'user': user, 'bookmarks': bookmarks}
-    return render(request, 'bookmark/user_bookmarks.html', context)
+class BookmarkCreateView(CreateView):
+    model = Bookmark
+    form_class = BookmarkForm
+    template_name = 'bookmark_create.html'
+    success_url = reverse_lazy('bookmark_list')
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
