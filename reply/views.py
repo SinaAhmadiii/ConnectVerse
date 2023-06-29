@@ -1,39 +1,23 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from comment.models import Comment
+from django.views.generic import CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
 from .models import Reply
+from .forms import ReplyForm
 
-def create_reply(request, comment_id):
-    comment = get_object_or_404(Comment, comment_id=comment_id)
-    
-    if request.method == 'POST':
-        reply_text = request.POST.get('reply_text')
-        reply = Reply(user=request.user, comment=comment, reply_text=reply_text)
-        reply.save()
-        return redirect('comment_detail', comment_id=comment_id)
-    
-    context = {'comment': comment}
-    return render(request, 'reply/create_reply.html', context)
+class ReplyCreateView(CreateView):
+    model = Reply
+    form_class = ReplyForm
 
-def edit_reply(request, reply_id):
-    reply = get_object_or_404(Reply, reply_id=reply_id)
-    comment_id = reply.comment.comment_id
-    
-    if request.method == 'POST':
-        reply_text = request.POST.get('reply_text')
-        reply.reply_text = reply_text
-        reply.save()
-        return redirect('comment_detail', comment_id=comment_id)
-    
-    context = {'reply': reply}
-    return render(request, 'reply/edit_reply.html', context)
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        form.instance.comment_id = self.kwargs['comment_id']
+        return super().form_valid(form)
 
-def delete_reply(request, reply_id):
-    reply = get_object_or_404(Reply, reply_id=reply_id)
-    comment_id = reply.comment.comment_id
-    
-    if request.method == 'POST':
-        reply.delete()
-        return redirect('comment_detail', comment_id=comment_id)
-    
-    context = {'reply': reply}
-    return render(request, 'reply/delete_reply.html', context)
+class ReplyUpdateView(UpdateView):
+    model = Reply
+    form_class = ReplyForm
+    template_name_suffix = '_update'
+
+class ReplyDeleteView(DeleteView):
+    model = Reply
+    success_url = reverse_lazy('comment-list')  
+    template_name_suffix = '_confirm_delete'
