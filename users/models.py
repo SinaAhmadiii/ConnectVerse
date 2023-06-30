@@ -37,19 +37,28 @@ class User(AbstractUser):
         help_text='The phone number of the user (optional).'
     )
 
-    def full_name(self):
-        return f"{self.first_name} {self.last_name}"
+    def get_full_name(self):
+        return f'{self.first_name} {self.last_name}'
 
-    def set_password(self, new_password):
-        self.set_password(new_password)
-        self.save()
-
-    @staticmethod
-    def get_user_by_email(email):
-        try:
-            return User.objects.get(email=email)
-        except User.DoesNotExist:
-            return None
+    def get_short_name(self):
+        return self.first_name
 
     def __str__(self):
         return self.username
+
+    def get_age(self):
+        return self.age
+
+    def get_phone_number(self):
+        return self.phone_number
+
+    def set_phone_number(self, phone_number):
+        self.phone_number = phone_number
+        self.save()
+
+    def get_email(self):
+        return self.email
+
+    def set_email(self, email):
+        self.email = email
+        self.save()
