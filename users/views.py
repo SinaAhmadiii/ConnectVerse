@@ -1,3 +1,4 @@
+from msilib.schema import ListView
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, \
@@ -8,6 +9,7 @@ from django.views.generic import FormView, TemplateView, UpdateView
 from django.shortcuts import redirect
 from .forms import UserRegistrationForm, UserLoginForm, UserPasswordChangeForm, UserPasswordResetForm, UserUpdateForm
 from .models import User
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
 
 class UserRegistrationView(FormView):
@@ -95,3 +97,26 @@ class UserPasswordResetConfirmView(PasswordResetConfirmView):
 
 class UserPasswordResetCompleteView(PasswordResetCompleteView):
     template_name = 'password_reset_complete.html'
+
+
+class UserListView(ListView):
+    model = User
+    template_name = 'user_list.html'
+    context_object_name = 'users'
+
+class UserCreateView(CreateView):
+    model = User
+    template_name = 'user_create.html'
+    fields = ['first_name', 'last_name', 'username', 'email', 'age', 'phone_number']
+    success_url = reverse_lazy('user_list')
+
+class UserUpdateView(UpdateView):
+    model = User
+    template_name = 'user_update.html'
+    fields = ['first_name', 'last_name', 'username', 'email', 'age', 'phone_number']
+    success_url = reverse_lazy('user_list')
+
+class UserDeleteView(DeleteView):
+    model = User
+    template_name = 'user_confirm_delete.html'
+    success_url = reverse_lazy('user_list')
