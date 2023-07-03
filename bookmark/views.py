@@ -1,4 +1,4 @@
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from .models import Bookmark
 from .forms import BookmarkForm
@@ -21,3 +21,14 @@ class BookmarkCreateView(CreateView):
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
+
+class BookmarkUpdateView(UpdateView):
+    model = Bookmark
+    form_class = BookmarkForm
+    template_name = 'bookmark_update.html'
+    success_url = reverse_lazy('bookmark_list')
+
+class BookmarkDeleteView(DeleteView):
+    model = Bookmark
+    template_name = 'bookmark_confirm_delete.html'
+    success_url = reverse_lazy('bookmark_list')
