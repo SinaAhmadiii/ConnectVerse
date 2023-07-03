@@ -1,7 +1,12 @@
-from django.views.generic import CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from .models import Reply
 from .forms import ReplyForm
+
+class ReplyListView(ListView):
+    model = Reply
+    template_name = 'reply_list.html'  
+    context_object_name = 'replies'
 
 class ReplyCreateView(CreateView):
     model = Reply
@@ -19,5 +24,5 @@ class ReplyUpdateView(UpdateView):
 
 class ReplyDeleteView(DeleteView):
     model = Reply
-    success_url = reverse_lazy('comment-list')  
+    success_url = reverse_lazy('comment-list')
     template_name_suffix = '_confirm_delete'
