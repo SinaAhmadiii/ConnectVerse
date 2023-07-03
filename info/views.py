@@ -1,58 +1,54 @@
 from django.shortcuts import render, redirect
-from django.views.generic import View
+from django.views.generic import View, CreateView, UpdateView, DeleteView, DetailView
 from django.contrib import messages
 from .forms import ProfilePictureForm, BioForm, DeleteProfileForm
-
 from .models import Profile
 
+class ProfileCreateView(CreateView):
+    model = Profile
+    template_name = 'profile_create.html'
+    fields = ['profile_picture', 'bio']
 
-class ProfileUpdateView(View):
-    def get(self, request):
-        profile = request.user.profile
-        picture_form = ProfilePictureForm(instance=profile)
-        bio_form = BioForm(instance=profile)
-        context = {
-            'picture_form': picture_form,
-            'bio_form': bio_form
-        }
-        return render(request, 'profile_update.html', context)
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        messages.success(self.request, 'Profile created successfully.')
+        return super().form_valid(form)
 
-    def post(self, request):
-        profile = request.user.profile
-        picture_form = ProfilePictureForm(request.POST, request.FILES, instance=profile)
-        bio_form = BioForm(request.POST, instance=profile)
+class ProfileUpdateView(UpdateView):
+    model = Profile
+    template_name = 'profile_update.html'
+    form_class = ProfilePictureForm
 
-        if picture_form.is_valid():
-            picture_form.save()
-            messages.success(request, 'Profile picture updated successfully.')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['bio_form'] = BioForm(instance=self.object)
+        return context
 
-        if bio_form.is_valid():
-            bio_form.save()
-            messages.success(request, 'Bio updated successfully.')
+    def form_valid(self, form):
+        messages.success(self.request, 'Profile picture updated successfully.')
+        return super().form_valid(form)
 
-        return redirect('profile')
+class BioUpdateView(UpdateView):
+    model = Profile
+    template_name = 'bio_update.html'
+    form_class = BioForm
 
+    def form_valid(self, form):
+        messages.success(self.request, 'Bio updated successfully.')
+        return super().form_valid(form)
 
-class ProfileDeleteView(View):
-    def get(self, request):
-        form = DeleteProfileForm()
-        return render(request, 'profile_delete.html', {'form': form})
+class ProfileDeleteView(DeleteView):
+    model = Profile
+    template_name = 'profile_delete.html'
+    success_url = '/home/'
+    context_object_name = 'profile'
 
-    def post(self, request):
-        form = DeleteProfileForm(request.POST, instance=request.user.profile)
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, 'Profile deleted successfully.')
+        return super().delete(request, *args, **kwargs)
 
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Profile deleted successfully.')
-            return redirect('home')
+class ProfileDetailView(DetailView):
+    model = Profile
+    template_name = 'profile_detail.html'
+    context_object_name = 'profile'
 
-        return render(request, 'profile_delete.html', {'form': form})
-
-
-class ProfileDetailView(View):
-    def get(self, request):
-        profile = request.user.profile
-        context = {
-            'profile': profile
-        }
-        return render(request, 'profile_detail.html', context)
