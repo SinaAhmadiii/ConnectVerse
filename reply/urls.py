@@ -1,9 +1,9 @@
 from django.urls import path
-from . import views
-
-app_name = 'reply'
+from .views import ReplyListView, ReplyCreateView, ReplyUpdateView, ReplyDeleteView
 
 urlpatterns = [
-    path('reply/<int:reply_id>/', views.reply_detail, name='reply_detail'),
-    path('comment/<int:comment_id>/replies/', views.comment_replies, name='comment_replies'),
+    path('replies/', ReplyListView.as_view(), name='reply-list'),
+    path('replies/create/', ReplyCreateView.as_view(), name='reply-create'),
+    path('replies/<int:pk>/update/', ReplyUpdateView.as_view(), name='reply-update'),
+    path('replies/<int:pk>/delete/', ReplyDeleteView.as_view(), name='reply-delete'),
 ]
