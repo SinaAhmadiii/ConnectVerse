@@ -3,6 +3,7 @@ from django.urls import reverse_lazy
 from .models import Bookmark
 from .forms import BookmarkForm
 
+
 class BookmarkListView(ListView):
     model = Bookmark
     template_name = 'bookmark_list.html'
@@ -11,6 +12,7 @@ class BookmarkListView(ListView):
     def get_queryset(self):
         user = self.request.user
         return Bookmark.objects.filter(user=user)
+
 
 class BookmarkCreateView(CreateView):
     model = Bookmark
@@ -22,11 +24,13 @@ class BookmarkCreateView(CreateView):
         form.instance.user = self.request.user
         return super().form_valid(form)
 
+
 class BookmarkUpdateView(UpdateView):
     model = Bookmark
     form_class = BookmarkForm
     template_name = 'bookmark_update.html'
     success_url = reverse_lazy('bookmark_list')
+
 
 class BookmarkDeleteView(DeleteView):
     model = Bookmark
