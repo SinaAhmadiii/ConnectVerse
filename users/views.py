@@ -1,15 +1,31 @@
-from msilib.schema import ListView
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, \
-    PasswordResetConfirmView, PasswordResetCompleteView
+from django.contrib.auth.views import (
+    PasswordResetView,
+    PasswordResetDoneView,
+    PasswordResetConfirmView,
+    PasswordResetCompleteView,
+)
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import FormView, TemplateView, UpdateView
+from django.views.generic import (
+    FormView,
+    TemplateView,
+    UpdateView,
+    ListView,
+    CreateView,
+    DeleteView,
+)
 from django.shortcuts import redirect
-from .forms import UserRegistrationForm, UserLoginForm, UserPasswordChangeForm, UserPasswordResetForm, UserUpdateForm
+
+from .forms import (
+    UserRegistrationForm,
+    UserLoginForm,
+    UserPasswordChangeForm,
+    UserPasswordResetForm,
+    UserUpdateForm,
+)
 from .models import User
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
 
 class UserRegistrationView(FormView):
@@ -104,17 +120,20 @@ class UserListView(ListView):
     template_name = 'user_list.html'
     context_object_name = 'users'
 
+
 class UserCreateView(CreateView):
     model = User
     template_name = 'user_create.html'
     fields = ['first_name', 'last_name', 'username', 'email', 'age', 'phone_number']
     success_url = reverse_lazy('user_list')
 
+
 class UserUpdateView(UpdateView):
     model = User
     template_name = 'user_update.html'
     fields = ['first_name', 'last_name', 'username', 'email', 'age', 'phone_number']
     success_url = reverse_lazy('user_list')
+
 
 class UserDeleteView(DeleteView):
     model = User
