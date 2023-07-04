@@ -3,10 +3,12 @@ from django.urls import reverse_lazy
 from .models import Reply
 from .forms import ReplyForm
 
+
 class ReplyListView(ListView):
     model = Reply
-    template_name = 'reply_list.html'  
+    template_name = 'reply_list.html'
     context_object_name = 'replies'
+
 
 class ReplyCreateView(CreateView):
     model = Reply
@@ -17,10 +19,12 @@ class ReplyCreateView(CreateView):
         form.instance.comment_id = self.kwargs['comment_id']
         return super().form_valid(form)
 
+
 class ReplyUpdateView(UpdateView):
     model = Reply
     form_class = ReplyForm
     template_name_suffix = '_update'
+
 
 class ReplyDeleteView(DeleteView):
     model = Reply
