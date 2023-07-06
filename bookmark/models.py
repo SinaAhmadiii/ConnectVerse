@@ -1,6 +1,8 @@
 from django.db import models
 from users.models import User
 from post.models import Post
+from django.conf import settings
+
 
 class Bookmark(models.Model):
     bookmark_id = models.AutoField(primary_key=True, verbose_name='Bookmark ID')

@@ -1,5 +1,7 @@
 from django.db import models
 from users.models import User
+from django.conf import settings
+
 
 class Post(models.Model):
     post_id = models.AutoField(primary_key=True, verbose_name='Post ID')
@@ -14,7 +16,3 @@ class Post(models.Model):
     def increment_likes(self):
         self.likes_count += 1
         self.save()
-
-post = Post.objects.get(post_id=1)
-post.increment_likes()
-

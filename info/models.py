@@ -1,5 +1,7 @@
 from django.db import models
 from users.models import User
+from django.conf import settings
+
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name="User")

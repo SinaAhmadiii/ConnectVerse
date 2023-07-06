@@ -128,13 +128,6 @@ class UserCreateView(CreateView):
     success_url = reverse_lazy('user_list')
 
 
-class UserUpdateView(UpdateView):
-    model = User
-    template_name = 'user_update.html'
-    fields = ['first_name', 'last_name', 'username', 'email', 'age', 'phone_number']
-    success_url = reverse_lazy('user_list')
-
-
 class UserDeleteView(DeleteView):
     model = User
     template_name = 'user_confirm_delete.html'
