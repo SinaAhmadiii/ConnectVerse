@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.views.generic import TemplateView
 from django.urls import include, path
 
 urlpatterns = [
@@ -9,5 +10,7 @@ urlpatterns = [
     path('comment/', include('comment.urls')),
     path('reply/', include('reply.urls')),
     path('bookmark/', include('bookmark.urls')),
+    path('home/', TemplateView.as_view(template_name='home.html'), name='home'),
+
 
 ]

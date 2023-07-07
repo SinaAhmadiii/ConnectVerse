@@ -51,13 +51,8 @@ ROOT_URLCONF = 'ConnectVerse.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'users', 'templates'),
-                 os.path.join(BASE_DIR, 'reply', 'templates'),
-                 os.path.join(BASE_DIR, 'post', 'templates'),
-                 os.path.join(BASE_DIR, 'info', 'templates'),
-                 os.path.join(BASE_DIR, 'comment','templates'),
-                 os.path.join(BASE_DIR, 'bookmark', 'templates'),
-                 ],
+        'DIRS': [
+            BASE_DIR /"templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

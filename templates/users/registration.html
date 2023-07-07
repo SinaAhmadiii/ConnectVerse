@@ -1,12 +1,15 @@
-{% extends 'base.html' %}
-
-{% block content %}
-  <div class="container">
-    <h2>User Registration</h2>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Registration</title>
+    <!-- Add CSS and Bootstrap links here -->
+</head>
+<body>
+    <h1>User Registration</h1>
     <form method="post">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <button class="btn btn-primary" type="submit">Register</button>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Register</button>
     </form>
-  </div>
-{% endblock %}
+</body>
+</html>
