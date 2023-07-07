@@ -1,14 +1,18 @@
 {% extends 'base.html' %}
 
+{% block title %}Bookmark List{% endblock %}
+
 {% block content %}
-  <div class="container">
-    <h2>Bookmarks</h2>
-    <ul>
-      {% for bookmark in bookmarks %}
-        <li>{{ bookmark.title }}</li>
-      {% empty %}
-        <li>No bookmarks found.</li>
-      {% endfor %}
-    </ul>
-  </div>
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2>Bookmark List</h2>
+        <ul class="list-group">
+            {% for bookmark in bookmarks %}
+            <li class="list-group-item">{{ bookmark.title }}</li>
+            {% empty %}
+            <li class="list-group-item">No bookmarks found.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
 {% endblock %}

@@ -1,14 +1,18 @@
 {% extends 'base.html' %}
 
+{% block title %}Comment List{% endblock %}
+
 {% block content %}
-  <div class="container">
-    <h2>Comments</h2>
-    <ul>
-      {% for comment in comments %}
-        <li>{{ comment.text }}</li>
-      {% empty %}
-        <li>No comments found.</li>
-      {% endfor %}
-    </ul>
-  </div>
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2>Comment List</h2>
+        <ul class="list-group">
+            {% for comment in comments %}
+            <li class="list-group-item">{{ comment.content }}</li>
+            {% empty %}
+            <li class="list-group-item">No comments found.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
 {% endblock %}

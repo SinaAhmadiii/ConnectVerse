@@ -1,14 +1,18 @@
 {% extends 'base.html' %}
 
+{% block title %}Reply List{% endblock %}
+
 {% block content %}
-  <div class="container">
-    <h2>Reply List</h2>
-    <ul>
-      {% for reply in replies %}
-        <li>{{ reply.content }}</li>
-      {% empty %}
-        <li>No replies found.</li>
-      {% endfor %}
-    </ul>
-  </div>
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2>Reply List</h2>
+        <ul class="list-group">
+            {% for reply in replies %}
+            <li class="list-group-item">{{ reply.content }}</li>
+            {% empty %}
+            <li class="list-group-item">No replies found.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
 {% endblock %}

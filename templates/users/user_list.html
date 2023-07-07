@@ -1,32 +1,18 @@
 {% extends 'base.html' %}
 
+{% block title %}User List{% endblock %}
+
 {% block content %}
-  <div class="container">
-    <h2>User List</h2>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>First Name</th>
-          <th>Last Name</th>
-          <th>Username</th>
-          <th>Email</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for user in users %}
-        <tr>
-          <td>{{ user.first_name }}</td>
-          <td>{{ user.last_name }}</td>
-          <td>{{ user.username }}</td>
-          <td>{{ user.email }}</td>
-          <td>
-            <a class="btn btn-primary" href="{% url 'user_update' user.id %}">Edit</a>
-            <a class="btn btn-danger" href="{% url 'user_delete' user.id %}">Delete</a>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2>User List</h2>
+        <ul class="list-group">
+            {% for user in users %}
+            <li class="list-group-item">{{ user.username }} - {{ user.email }}</li>
+            {% empty %}
+            <li class="list-group-item">No users found.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
 {% endblock %}
