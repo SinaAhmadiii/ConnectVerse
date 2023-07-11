@@ -30,16 +30,57 @@ ConnectVerse is built using the following technologies:
 
 To set up ConnectVerse locally, follow these steps:
 
-1. Clone the ConnectVerse repository from GitHub: `git clone https://github.com/SinaAhmadiii/ConnectVerse.git`
+1. Clone the repository:
 
-2. Install the required dependencies using pip: `pip install -r requirements.txt`
+```shell
+git clone https://github.com/SinaAhmadiii/ConnectVerse.git
+```
 
-3. Set up the database by running migrations: `python manage.py migrate`
+2. Change to the project's directory:
 
-4. Start the development server: `python manage.py runserver`
+```shell
+cd ConnectVerse
+```
 
-5. Access ConnectVerse in your web browser at `http://localhost:8000`
+3. Create a virtual environment:
 
+```shell
+python -m venv venv
+```
+
+4. Activate the virtual environment:
+
+On macOS and Linux:
+
+```shell
+source venv/bin/activate
+```
+
+On Windows:
+
+```shell
+venv\Scripts\activate
+```
+
+5. Install the project dependencies:
+
+```shell
+pip install -r requirements.txt
+```
+
+6. Run database migrations:
+
+```shell
+python manage.py migrate
+```
+
+7. Start the development server:
+
+```shell
+python manage.py runserver
+```
+
+8. Open your web browser and visit `http://localhost:8000` to access ConnectVerse.
 ## Contributions
 
 Contributions to ConnectVerse are welcome! If you have any ideas for new features, improvements, or bug fixes, feel free to open an issue or submit a pull request on the GitHub repository.
