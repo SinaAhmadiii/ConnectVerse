@@ -10,7 +10,7 @@ urlpatterns = [
     path('comment/', include('comment.urls')),
     path('reply/', include('reply.urls')),
     path('bookmark/', include('bookmark.urls')),
-    path('home/', TemplateView.as_view(template_name='home.html'), name='home'),
+    path('', TemplateView.as_view(template_name='base.html'), name='home'),
 
 
 ]
