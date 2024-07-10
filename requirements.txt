@@ -29,3 +29,4 @@ tomli==2.0.1
 typing_extensions==4.6.3
 uritemplate==4.1.1
 urllib3==1.26.16
+zipp>=3.19.1 # not directly required, pinned by Snyk to avoid a vulnerability
