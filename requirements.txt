@@ -24,7 +24,7 @@ pytest==7.3.2
 requests==2.31.0
 rsa==4.9
 six==1.16.0
-sqlparse==0.4.4
+sqlparse==0.5.4
 tomli==2.0.1
 typing_extensions==4.6.3
 uritemplate==4.1.1
